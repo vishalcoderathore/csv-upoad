@@ -1,0 +1,22 @@
+{
+  "name": "csv-upload",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@types/node": "^20.4.0",
+    "concurrently": "^8.2.0",
+    "csv-parser": "^3.0.0",
+    "preact": "^10.13.1"
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "^2.5.0",
+    "typescript": "^5.0.2",
+    "vite": "^4.3.2"
+  }
+}
