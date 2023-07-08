@@ -1,8 +1,12 @@
 import { useState } from "preact/hooks";
-import { CSVReader } from "../utils/CSVReader";
 import { MatchResult } from "../MatchResult";
-import {MatchData} from '../utils/CSVReader'
+import { MatchData } from "../MatchReader";
+import { MatchReader } from "../MatchReader";
 
+/**
+ * Function to analyze the MatchData.
+ * @param {MatchData[]} data - The array of MatchData.
+ */
 const performCustomAnalysis = (data: MatchData[]) => {
   console.log(data);
 
@@ -19,10 +23,17 @@ const performCustomAnalysis = (data: MatchData[]) => {
   console.log(`${team} won ${manUnitedWins} matches`);
 };
 
+/**
+ * The CSVAnalyzer component for file upload and CSV analysis.
+ */
 const CSVAnalyzer = () => {
   const [isUploaded, setIsUploaded] = useState(false);
-  const csvReader = new CSVReader();
+  const csvReader = new MatchReader();
 
+  /**
+   * Handle file upload and CSV parsing.
+   * @param {Event} event - The file upload event.
+   */
   const handleFileUpload = async (event: Event) => {
     const target = event.target as HTMLInputElement;
     const file = target.files?.[0];

@@ -1,13 +1,14 @@
-import { dateStringToDate } from ".";
-import { MatchResult } from "../MatchResult";
-
-export type MatchData = [Date, string, string, number, number, MatchResult, string];
-
 /**
- * CSVReader class handles reading and parsing CSV files.
+ * Abstract CSVReader class for reading and parsing CSV files.
  * @class
  */
-export class CSVReader {
+export abstract class CSVReader<T> {
+  /**
+   * Method to map a row in CSV to a typed object.
+   * Implemented by the child classes that extend CSVReader.
+   */
+  abstract mapRow(entry: string[]): T;
+
   /**
    * Read the content of a file.
    * @param {File} file - The file to read.
@@ -27,24 +28,13 @@ export class CSVReader {
   /**
    * Parse a string into a 2D array representing the CSV content.
    * @param {string} contents - The string to parse.
-   * @returns {MatchData[]} A 2D array where each inner array represents a row of the CSV file,
+   * @returns {T[]} A 2D array where each inner array represents a row of the CSV file,
    * and each item in the row represents a cell in the CSV.
    */
-  parseCSV(contents: string): MatchData[] {
+  parseCSV(contents: string): T[] {
     const lines = contents.split(/\r\n|\n/);
-    const data: MatchData[] = lines
+    return lines
       .map((entry: string): string[] => entry.split(","))
-      .map((entry: string[]): MatchData => {
-        return [
-          dateStringToDate(entry[0]),
-          entry[1],
-          entry[2],
-          parseInt(entry[3]),
-          parseInt(entry[4]),
-          entry[5] as MatchResult,
-          entry[6],
-        ];
-      });
-    return data;
+      .map(this.mapRow);
   }
 }
