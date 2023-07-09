@@ -23,3 +23,7 @@ The `DataReader` interface in this approach exemplifies the Strategy pattern. Th
 In our case, `DataReader` is the strategy, and `MatchReader` is the context. `MatchReader` delegates the work of reading and parsing the file to the `DataReader`. This makes `MatchReader` flexible in terms of the source of its data, which can be a CSV file, an API, a database, or some other source.
 
 The use of the Strategy pattern solves the problem of tightly coupled components. Without this design, `MatchReader` would be tightly coupled to `CSVReader`, and any changes to how files are read or parsed would require changes to both `MatchReader` and `CSVReader`. By using interfaces, responsibilities are clearly separated. This makes the system easier to test, maintain, and extend, as new types of data readers can be added without changing the existing classes.
+
+### Run Code
+
+Clone the repo, run `npm run dev`, upload the included `football.csv`. Fire up the developer console, and checkout the output. 
