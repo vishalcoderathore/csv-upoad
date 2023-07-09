@@ -1,7 +1,7 @@
 /**
  * Interface for classes that can read and parse data from files.
  */
-export interface DataReader {
+export interface DataReaderInterface {
   /**
    * Reads the content of a file and returns a promise that resolves with the content as a string.
    * @param file The file to read.

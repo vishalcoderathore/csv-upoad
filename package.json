@@ -12,6 +12,8 @@
     "@types/node": "^20.4.0",
     "concurrently": "^8.2.0",
     "csv-parser": "^3.0.0",
+    "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.5.29",
     "preact": "^10.13.1"
   },
   "devDependencies": {

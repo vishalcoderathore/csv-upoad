@@ -1,34 +1,14 @@
 import { useState } from "preact/hooks";
 import { CSVReader } from "../utils/CSVReader";
-import { MatchResult } from "../MatchResult";
-import { MatchReader } from "../MatchReader";
+import { MatchReader } from "../services/MatchReader";
+import { WinsAnalysis } from "../utils/WinsAnalysis";
+import { ConsoleReport } from "../utils/ConsoleReport";
+import { Summary } from "../services/Summary";
+import { HTMLReport } from "../utils/HTMLReport";
 
-/**
- * Performs analysis on the matches data read from the CSV file.
- * @param matchReader - The MatchReader instance containing matches data.
- */
-const performCustomAnalysis = (matchReader: MatchReader) => {
-  console.log(matchReader.matches);
-
-  const team = "Man United";
-  let manUnitedWins = 0;
-  matchReader.matches.forEach((match) => {
-    if (
-      (match[1] === team && match[5] === MatchResult.HomeWin) ||
-      (match[2] === team && match[5] === MatchResult.AwayWin)
-    ) {
-      manUnitedWins++;
-    }
-  });
-  console.log(`${team} won ${manUnitedWins} matches`);
-};
-
-/**
- * CSVAnalyzer component. Allows user to upload CSV files and performs analysis on the uploaded data.
- */
 const CSVAnalyzer = () => {
   const [isUploaded, setIsUploaded] = useState(false);
-  const csvReader = new CSVReader();
+  const [matchReader, setMatchReader] = useState<MatchReader | null>(null);
 
   /**
    * Handles the file upload event.
@@ -37,11 +17,14 @@ const CSVAnalyzer = () => {
   const handleFileUpload = async (event: Event) => {
     const target = event.target as HTMLInputElement;
     const file = target.files?.[0];
+
     if (file) {
+      const csvReader = new CSVReader();
+      const reader = new MatchReader(csvReader);
+
       try {
-        const matchReader = new MatchReader(csvReader);
-        await matchReader.load(file);
-        performCustomAnalysis(matchReader);
+        await reader.load(file);
+        setMatchReader(reader);
         setIsUploaded(true);
       } catch (error) {
         console.error("Error reading file:", error);
@@ -49,10 +32,46 @@ const CSVAnalyzer = () => {
     }
   };
 
+  /**
+   * Outputs analysis results to the console.
+   */
+  const handleConsoleOutput = () => {
+    if (matchReader) {
+      const summary = new Summary(
+        new WinsAnalysis("Man United"),
+        new ConsoleReport()
+      );
+      summary.buildAndPrintReport(matchReader.matches);
+    }
+  };
+
+  /**
+   * Downloads analysis results as a PDF.
+   */
+  const handleDownload = () => {
+    if (matchReader) {
+      const summary = new Summary(
+        new WinsAnalysis("Man United"),
+        new HTMLReport()
+      );
+      summary.buildAndPrintReport(matchReader.matches);
+    }
+  };
+
   return (
     <div>
       <input type='file' accept='.csv' onChange={handleFileUpload} />
-      {isUploaded && <p>CSV uploaded successfully</p>}
+      {isUploaded && (
+        <div>
+          <p>CSV uploaded successfully</p>
+          <div style={{ display: "flex", gap: "10px" }}>
+            <button onClick={handleConsoleOutput}>
+              View Results in Console
+            </button>
+            <button onClick={handleDownload}>Download CSV</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
