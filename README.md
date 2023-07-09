@@ -8,12 +8,18 @@ The master branch includes the basic implementation of the CSV upload utility cl
 
 ## Refactor-1-Abstract-Classes Branch
 
-The `refactor-1-abstract-classes` branch introduces a refactor of the `CSVReader.ts` file to make it more reusable and extensible by using abstract classes.
+The `refactor-1-abstract-classes` branch introduces a refactor of the `CSVReader.ts` file to make it more reusable and extensible by using abstract classes. In this approach, an abstract `CSVReader` class is defined which has methods for reading and parsing CSV files.
 
-In this approach, we have an abstract `CSVReader` class that defines methods for reading and parsing CSV files. It includes an abstract `mapRow` method that is left for child classes to implement. This method is responsible for mapping each row in the CSV to a typed object.
+## Refactor-2-Interfaces Branch
 
-For example, in the `src` directory there is a CSV file called `football.csv` that includes a list of different matches and their outcomes. The `MatchReader` class in `MatchReader.ts` file extends `CSVReader` class and is specifically tailored to parse this type of CSV data.
+The `refactor-2-interfaces` branch refactors the solution further by using interfaces. It introduces a `DataReader` interface, which specifies a contract for what methods a data reader should have. In this case, `DataReader` mandates that any class implementing it should have `readFile` and `parseCSV` methods. The `DataReader` interface allows us to define a contract for a data reader, promoting reusability across various types of data readers.
 
-If there is any other CSV file that contains a different type of data, a new class can be created extending the `CSVReader` class. This new class would implement the `mapRow` method to map a CSV row to a custom object type that matches the structure of the new CSV data.
+In this approach, we have a `MatchReader` class that utilizes an object implementing the `DataReader` interface to read and parse files. This class transforms the parsed data into an array of `MatchData`. It decouples the task of data reading and parsing from the task of data processing, resulting in more modular, maintainable, and testable code.
 
-By using abstract classes, we can create different reader classes for different types of CSV files without having to rewrite the CSV reading and parsing logic. It promotes code reuse and cleaner, more maintainable code.
+### The Strategy Pattern
+
+The `DataReader` interface in this approach exemplifies the Strategy pattern. The Strategy pattern is a behavioral design pattern that turns a set of behaviors into objects and makes them interchangeable inside original context object. The original object, called context, holds a reference to a strategy object and delegates it executing the behavior.
+
+In our case, `DataReader` is the strategy, and `MatchReader` is the context. `MatchReader` delegates the work of reading and parsing the file to the `DataReader`. This makes `MatchReader` flexible in terms of the source of its data, which can be a CSV file, an API, a database, or some other source.
+
+The use of the Strategy pattern solves the problem of tightly coupled components. Without this design, `MatchReader` would be tightly coupled to `CSVReader`, and any changes to how files are read or parsed would require changes to both `MatchReader` and `CSVReader`. By using interfaces, responsibilities are clearly separated. This makes the system easier to test, maintain, and extend, as new types of data readers can be added without changing the existing classes.
