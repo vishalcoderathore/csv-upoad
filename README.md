@@ -24,9 +24,11 @@ In our case, `DataReader` is the strategy, and `MatchReader` is the context. `Ma
 
 The use of the Strategy pattern solves the problem of tightly coupled components. Without this design, `MatchReader` would be tightly coupled to `CSVReader`, and any changes to how files are read or parsed would require changes to both `MatchReader` and `CSVReader`. By using interfaces, responsibilities are clearly separated. This makes the system easier to test, maintain, and extend, as new types of data readers can be added without changing the existing classes.
 
+![Pattern](./src/assets/strategy_pattern.png)
+
 ### Run Code
 
-Clone the repo, run `npm run dev`, upload the included `football.csv`. Fire up the developer console, and checkout the output. 
+Clone the repo, run `npm run dev`, upload the included `football.csv`. Fire up the developer console, and checkout the output.
 
 ### Application Screenshots (Available on Refactor-2-Interfaces Branch)
 
@@ -42,4 +44,4 @@ When you upload the file
 When you click on `View Results in Console`
 ![Home](./src/assets/console_result.png)
 
-Similarly you can also download the pdf. 
+Similarly you can also download the pdf.
